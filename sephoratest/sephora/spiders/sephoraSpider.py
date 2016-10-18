@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+import re
 from sephora.items import SephoraItem
 from sephora.items import SephoraLoader
 
@@ -13,16 +13,19 @@ class SephoraspiderSpider(CrawlSpider):
     name = "sephoraSpider"
     allowed_domains = ["sephora.com", "reviews.sephora.com"]
     start_urls = (
-        #'http://www.sephora.com/',
-        'http://www.sephora.com/skincare/',
+        'http://www.sephora.com/',
+        #'http://www.sephora.com/skincare/',
         #'http://www.sephora.com/black-tea-age-delay-cream-P217512',
     )
 
     rules = (
-#        Rule(LinkExtractor(allow=(".+P\d{6}\D*", )),
         Rule(LinkExtractor(allow=(".+P\d{6}\D*")), callback='parse_item',
              follow=False),
-        Rule(LinkExtractor(allow=()), follow=True),
+        Rule(LinkExtractor(allow=(), deny=("t5\/.+",
+                                           "profile.+",
+                                           "gallery.+",
+                                           "stores.+",
+                                           "storelist.+")), follow=True),
     )
 
     def parse_item(self, response):
@@ -32,8 +35,12 @@ class SephoraspiderSpider(CrawlSpider):
                                   'html': 1})
 
     def parse_link(self, response):
-        sku = re.match(r"P\d{6}", response.url.split).group(0)
         hxs = Selector(response)
+        sku = re.search(r"P\d{6}", str(response.url))
+        if sku:
+            sku = sku.group(0)
+        else:
+            yield None
         items = hxs.xpath('//body')
         category_link = '//li[@class= \
                             "Breadcrumb-item Breadcrumb-item--current" \

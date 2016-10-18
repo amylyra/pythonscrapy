@@ -13,6 +13,14 @@ class SephoraPipeline(object):
         return item
 
 
+class RejectItem(object):
+    def process_item(self, item, spider):
+        if not item.get('name', False):
+            raise DropItem("Invalid item found %s." % item)
+
+        return item
+
+
 class DuplicateSephoraPipeline(object):
 
     def __init__(self):
@@ -24,7 +32,7 @@ class DuplicateSephoraPipeline(object):
         hash_id = hashlib.md5(base).hexdigest()
 
         if hash_id in self.ids_seen:
-            raise DropItem("Duplicate item: %s" % base)
+            raise DropItem("Duplicate item: %s." % base)
         else:
             self.ids_seen.add(hash_id)
             return item
