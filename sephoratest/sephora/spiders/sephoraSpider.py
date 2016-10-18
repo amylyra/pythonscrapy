@@ -25,7 +25,8 @@ class SephoraspiderSpider(CrawlSpider):
                                            "profile.+",
                                            "gallery.+",
                                            "stores.+",
-                                           "storelist.+")), follow=True),
+                                           "storelist.+",
+                                           "search.+")), follow=True),
     )
 
     def parse_item(self, response):

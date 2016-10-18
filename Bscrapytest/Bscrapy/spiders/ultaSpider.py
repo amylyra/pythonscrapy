@@ -5,7 +5,6 @@ from scrapy.spiders import CrawlSpider
 from scrapy.spiders import Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.selector import Selector
-#from scrapy_splash import SplashRequest
 
 
 class ultaSpider(CrawlSpider):

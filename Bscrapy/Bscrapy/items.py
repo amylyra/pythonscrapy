@@ -12,7 +12,8 @@ from scrapy.item import Field
 class BItem(Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    brand = Field()
-    name = Field()
-#    price = Field()
-    ingredient = Field()
+#    brand = Field()
+#    name = Field()
+##    price = Field()
+#    ingredient = Field()
+    pass
