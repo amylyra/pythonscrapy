@@ -9,9 +9,8 @@ def strip_html(html_str):
 
 
 def decoding(l):
-    return [il.decode() for il in l]
+    return l.decode()
 
 
 def trim_whitespace(trs):
-    return [ls.replace('\n', '').replace('\t', '').strip()
-            for ls in trs]
+    return trs.replace('\n', '').replace('\t', '').replace('\r', '').strip()
