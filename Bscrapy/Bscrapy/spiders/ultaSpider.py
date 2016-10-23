@@ -18,18 +18,18 @@ class ultaSpider(CrawlSpider):
     name = "ultaSpider"
     allowed_domains = ["ulta.com"]
     start_urls = (
-        #"http://www.ulta.com/",
-        #"http://www.ulta.com/global/nav/allbrands.jsp",
-        "http://www.ulta.com/skin-care?N=2707",
-        #"http://www.ulta.com/microdelivery-exfoliating-wash?productId=xlsImpprod1490142",
+        "http://www.ulta.com/",
     )
 
     rules = (
-        Rule(LinkExtractor(allow=('.*?\/.*\?productId\=.*')),
+        Rule(LinkExtractor(allow=('.*?\/.*\?productId\=.*'),
+                           restrict_xpaths='//a'),
              callback='parse_item', follow=True),
-        Rule(LinkExtractor(allow=()), follow=True),
-        #Rule(LinkExtractor(allow=('.*?\?productId\=.*')),
-        #     callback='parse_item', follow=True),
+        Rule(LinkExtractor(allow=('.*?\?productId\=.*'),
+                           restrict_xpaths='//a'),
+             callback='parse_item', follow=True),
+        Rule(LinkExtractor(allow=(), restrict_xpaths='//a'),
+             follow=True),
     )
 
     def __init__(self):
@@ -37,7 +37,11 @@ class ultaSpider(CrawlSpider):
         self.driver = webdriver.PhantomJS()
 
     def parse_item(self, response):
-        self.driver.get(response.url)
+        print "LINK: ", response.url
+        driver = webdriver.PhantomJS()
+        #driver = self.driver
+        driver.get(response.url)
+        time.sleep(.5)
         item = Selector(response).xpath('//html[@lang="en"]')
         sku = item.xpath(' \
                     //span[@id="itemNumber"]/text()').extract_first()
@@ -103,14 +107,14 @@ class ultaSpider(CrawlSpider):
 
         while True:
             try:
-                wait = WebDriverWait(self.driver, 1)
+                wait = WebDriverWait(driver, 1)
                 next_link = ('//span[@class="pr-page-next"]'
                              '//a[@data-pr-event="header-page-next-link"]')
                 nextr_ele = EC.presence_of_element_located((By.XPATH, next_link))
                 nextr = wait.until(nextr_ele)
                 nextr.click()
                 time.sleep(1)
-                reviews = Selector(text=self.driver.page_source)
+                reviews = Selector(text=driver.page_source)
                 reviews = reviews.xpath('//div[@class="pr-review-wrap"]')
             except:
                 break
@@ -118,7 +122,7 @@ class ultaSpider(CrawlSpider):
             for r in reviews:
                 new_item.add_value('reviews', self.Review(r))
 
-        self.driver.close()
+        driver.close()
         yield new_item.load_item()
 
     def Review(self, response):
