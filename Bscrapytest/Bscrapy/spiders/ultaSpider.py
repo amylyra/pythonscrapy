@@ -10,15 +10,19 @@ from scrapy.selector import Selector
 class ultaSpider(CrawlSpider):
     name = "ultaSpider"
     allowed_domains = ["ulta.com"]
+    #allowed_domains = ["skinstore.com"]
+    #allowed_domains = ["sephora.com"]
+
     start_urls = (
         "http://www.ulta.com",
+        #"http://www.sephora.com/",
+        #"http://www.skinstore.com",
     )
 
     rules = (
-        Rule(LinkExtractor(allow=('.*?\/.*\?productId\=.*')),
-             callback='parse_item', follow=True),
-#        Rule(LinkExtractor(allow=()),
+#        Rule(LinkExtractor(allow=('\/.*?\/.*\?productId\=.*')),
 #             callback='parse_item', follow=True),
+        Rule(LinkExtractor(allow=(), canonicalize=True), follow=True),
     )
 
     def parse_item(self, response):
@@ -36,8 +40,6 @@ class ultaSpider(CrawlSpider):
             new_item['ingredient'] = item.xpath(
                 '//div[@class="product-catalog-content current-ingredients"]/text()'
             ).extract_first()
-#            new_item['price'] =
-#            new_items.append(new_item)
 
             yield new_item
 #        return new_items

@@ -18,15 +18,18 @@ class ultaSpider(CrawlSpider):
     name = "ultaSpider"
     allowed_domains = ["ulta.com"]
     start_urls = (
-        #"http://www.ulta.com",
-        "http://www.ulta.com/microdelivery-exfoliating-wash?productId=xlsImpprod1490142",
+        #"http://www.ulta.com/",
+        #"http://www.ulta.com/global/nav/allbrands.jsp",
+        "http://www.ulta.com/skin-care?N=2707",
+        #"http://www.ulta.com/microdelivery-exfoliating-wash?productId=xlsImpprod1490142",
     )
 
     rules = (
         Rule(LinkExtractor(allow=('.*?\/.*\?productId\=.*')),
              callback='parse_item', follow=True),
-#        Rule(LinkExtractor(allow=()),
-#             callback='parse_item', follow=False),
+        Rule(LinkExtractor(allow=()), follow=True),
+        #Rule(LinkExtractor(allow=('.*?\?productId\=.*')),
+        #     callback='parse_item', follow=True),
     )
 
     def __init__(self):

@@ -1,16 +1,5 @@
-[INFO  - 2016-10-19T06:46:58.432Z] GhostDriver - Main - running on port 62897
-[INFO  - 2016-10-19T06:46:59.025Z] Session [d540e7d0-95c7-11e6-b89c-e33fd1edf017] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1","webSecurityEnabled":true}
-[INFO  - 2016-10-19T06:46:59.025Z] Session [d540e7d0-95c7-11e6-b89c-e33fd1edf017] - page.customHeaders:  - {}
-[INFO  - 2016-10-19T06:46:59.025Z] Session [d540e7d0-95c7-11e6-b89c-e33fd1edf017] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.1.1","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"mac-10.11 (El Capitan)-64bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
-[INFO  - 2016-10-19T06:46:59.025Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: d540e7d0-95c7-11e6-b89c-e33fd1edf017
-[ERROR - 2016-10-19T06:47:01.613Z] Session [d540e7d0-95c7-11e6-b89c-e33fd1edf017] - page.onError - msg: TypeError: undefined is not an object (evaluating 'DV.at')
-
-  phantomjs://platform/console++.js:263 in error
-[ERROR - 2016-10-19T06:47:01.613Z] Session [d540e7d0-95c7-11e6-b89c-e33fd1edf017] - page.onError - stack:
-  BJ (http://www.ulta.com/reviewcenter/pwr/engine/js/full.js:1)
-  (anonymous function) (http://www.ulta.com/reviewcenter/pwr/engine/js/full.js:1)
-  (anonymous function) (http://www.ulta.com/reviewcenter/pwr/engine/js/full.js:1)
-  (anonymous function) (http://www.ulta.com/reviewcenter/pwr/engine/js/full.js:1)
-  DZ (http://www.ulta.com/reviewcenter/pwr/engine/js/full.js:1)
-
-  phantomjs://platform/console++.js:263 in error
+[INFO  - 2016-10-23T07:56:44.205Z] GhostDriver - Main - running on port 63316
+[INFO  - 2016-10-23T07:56:44.797Z] Session [3dd20690-98f6-11e6-8a9f-152fec2ca0c3] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1","webSecurityEnabled":true}
+[INFO  - 2016-10-23T07:56:44.797Z] Session [3dd20690-98f6-11e6-8a9f-152fec2ca0c3] - page.customHeaders:  - {}
+[INFO  - 2016-10-23T07:56:44.797Z] Session [3dd20690-98f6-11e6-8a9f-152fec2ca0c3] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.1.1","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"mac-10.11 (El Capitan)-64bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
+[INFO  - 2016-10-23T07:56:44.797Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: 3dd20690-98f6-11e6-8a9f-152fec2ca0c3

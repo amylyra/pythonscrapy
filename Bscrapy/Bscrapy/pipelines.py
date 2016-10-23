@@ -20,7 +20,10 @@ class DuplicateBscrapyPipeline(object):
         self.ids_seen = set()
 
     def process_item(self, item, spider):
-        base = item['sku'][0]
+        try:
+            base = item['sku'][0]
+        except:
+            return
         hash_id = hashlib.md5(base).hexdigest()
         if hash_id in self.ids_seen:
             raise DropItem("Duplicate item: %s" % base)
