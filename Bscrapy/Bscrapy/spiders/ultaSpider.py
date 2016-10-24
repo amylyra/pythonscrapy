@@ -37,7 +37,6 @@ class ultaSpider(CrawlSpider):
         self.driver = webdriver.PhantomJS()
 
     def parse_item(self, response):
-        print "LINK: ", response.url
         driver = webdriver.PhantomJS()
         #driver = self.driver
         driver.get(response.url)
@@ -49,6 +48,7 @@ class ultaSpider(CrawlSpider):
         if sku:
             sku = sku.group(0)
         else:
+            driver.close()
             yield None
 
         name_link = '//h1[@itemprop="name"]/text()'
