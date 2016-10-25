@@ -26,8 +26,8 @@ class ultaSpider(CrawlSpider):
     rules = (
         Rule(LinkExtractor(allow=('.*\/\d{8}.*')),
              callback='parse_item', follow=False),
-        #Rule(LinkExtractor(allow=()),
-        #     follow=True),
+        Rule(LinkExtractor(allow=(), deny_domains=["m"]),
+             follow=True),
     )
 
 #    def __init__(self):
@@ -35,7 +35,6 @@ class ultaSpider(CrawlSpider):
 #        self.driver = webdriver.PhantomJS()
 
     def parse_item(self, response):
-        time.sleep(.5)
         item = Selector(response).xpath('//html[@lang="en-us"]//body')
         sku = item.xpath(' \
                     //div[@class="product-title-wrap"]/@rel').extract_first()
@@ -85,22 +84,24 @@ class ultaSpider(CrawlSpider):
                 break
         driver = webdriver.PhantomJS()
         driver.get(response.url)
+        time.sleep(1)
         while True:
             try:
-                wait = WebDriverWait(driver, 1)
+                wait = WebDriverWait(driver, 20)
                 next_link = ('//a[@id="next-button"]//div[@class="active"]')
                 nextr_ele = EC.presence_of_element_located((By.XPATH, next_link))
                 nextr = wait.until(nextr_ele)
                 nextr.click()
-                time.sleep(1)
+                time.sleep(2)
                 reviews = Selector(text=driver.page_source)
+                reviews = reviews.xpath('//html[@lang="en-us"]//body')
                 reviews = reviews.xpath('//div[@class="review-block"]')
-                count = 0
-                for r in reviews:
-                    count += 1
-                    new_item.add_value('reviews', self.Review(r))
             except:
                 break
+
+            for r in reviews:
+                new_item.add_value('reviews', self.Review(r))
+
         driver.close()
         yield new_item.load_item()
         #pass
