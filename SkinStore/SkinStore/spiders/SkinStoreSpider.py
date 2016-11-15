@@ -19,15 +19,35 @@ class ultaSpider(CrawlSpider):
     name = "SkinStoreSpider"
     allowed_domains = ["skinstore.com"]
     start_urls = (
-        "http://www.skinstore.com/",
-        #"http://www.skinstore.com/skinceuticals-physical-fusion-spf-50/11291565.html",
+        #"http://www.skinstore.com/",
+        "http://www.skinstore.com/skin-care/lotions.list?pageNumber=1",
+        "http://www.skinstore.com/skin-care/lotions.list?pageNumber=2",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=1",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=2",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=3",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=4",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=5",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=6",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=7",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=8",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=9",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=10",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=11",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=12",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=13",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=14",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=15",
+        "http://www.skinstore.com/skin-care/moisturizers.list?pageNumber=16",
+        "http://www.skinstore.com/skin-care/balms.list",
+        "http://www.skinstore.com/skin-care/oils.list?pageNumber=1",
+        "http://www.skinstore.com/skin-care/oils.list?pageNumber=2",
     )
 
     rules = (
         Rule(LinkExtractor(allow=('.*\/\d{8}.*')),
              callback='parse_item', follow=False),
-        Rule(LinkExtractor(allow=(), deny_domains=["m"]),
-             follow=True),
+        #Rule(LinkExtractor(allow=(), deny_domains=["m"]),
+        #     follow=True),
     )
 
 #    def __init__(self):
@@ -35,6 +55,8 @@ class ultaSpider(CrawlSpider):
 #        self.driver = webdriver.PhantomJS()
 
     def parse_item(self, response):
+        with open('try.txt', 'a') as f:
+            f.write(response.url + '\n')
         item = Selector(response).xpath('//html[@lang="en-us"]//body')
         sku = item.xpath(' \
                     //div[@class="product-title-wrap"]/@rel').extract_first()
