@@ -15,7 +15,7 @@ class DuplicateSephorareviewPipeline(object):
 
     def process_item(self, item, spider):
         base = "%s%s" % (''.join(item['sku']).encode('utf-8'),
-                         ''.join(item['user']).encode('utf-8'))
+                         ''.join(item['page']).encode('utf-8'))
 
         hash_id = hashlib.md5(base).hexdigest()
 

@@ -8,24 +8,21 @@
 from scrapy.item import Item
 from scrapy.item import Field
 from scrapy.loader import ItemLoader
-from scrapy.loader.processors import Compose
+from scrapy.loader.processors import MapCompose
+from scrapy.loader.processors import TakeFirst
 from util import strip_html, trim_whitespace
-#from sephorareview.util import strip_html, trim_whitespace
 
 
 class SephoraReviewLoader(ItemLoader):
-    sku = Compose(strip_html, trim_whitespace)
-    user = Compose(strip_html, trim_whitespace)
-    skintype = Compose(strip_html, trim_whitespace)
-    age = Compose(strip_html, trim_whitespace)
-    location = Compose(strip_html, trim_whitespace)
-    date = Compose(strip_html, trim_whitespace)
-    rating = Compose(strip_html, trim_whitespace)
-    title = Compose(strip_html, trim_whitespace)
-    comment = Compose(strip_html, trim_whitespace)
+    sku_out = MapCompose(strip_html, trim_whitespace)
+    url_out = MapCompose(strip_html, trim_whitespace)
+    ratings_out = MapCompose(strip_html, trim_whitespace)
+    number_review_out = MapCompose(strip_html, trim_whitespace)
+    page_out = MapCompose(strip_html, trim_whitespace)
+    reviews_out = MapCompose(strip_html, trim_whitespace)
 
 
-class SephorareviewItem(Item):
+class SephoraReviewItem(Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
 
@@ -39,12 +36,9 @@ class SephorareviewItem(Item):
                 pass
         return il.load_item()
 
-    sku = Field()
-    user = Field()
-    skintype = Field()
-    age = Field()
-    location = Field()
-    date = Field()
-    rating = Field()
-    title = Field()
-    comment = Field()
+    sku = Field(output_processor=TakeFirst())
+    url = Field(output_processor=TakeFirst())
+    ratings = Field()
+    number_review = Field(output_processor=TakeFirst())
+    page = Field(output_processor=TakeFirst)
+    reviews = Field()
