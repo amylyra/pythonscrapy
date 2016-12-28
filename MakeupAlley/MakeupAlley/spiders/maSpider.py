@@ -2,9 +2,11 @@
 import json
 import time
 import scrapy
+import re
 #from MakeupAlley.loginform import fill_login_form
 from MakeupAlley.items import MakeupalleyLoader
 from MakeupAlley.items import MakeupalleyItem
+from MakeupAlley.util import strip_html, trim_whitespace, decoding
 
 from scrapy.spiders import CrawlSpider
 from scrapy.spiders import Rule
@@ -31,7 +33,7 @@ class MaspiderSpider(CrawlSpider):
                 )
 
     def login_parse(self, response):
-        # args, url, method = fill_login_form(response.url, reponse.body,
+        # args, url, method = fill_login_form(response.url, response.body,
         #                                    self.login_user, self.login_pass)
         return scrapy.FormRequest.from_response(
             response, 
@@ -50,15 +52,23 @@ class MaspiderSpider(CrawlSpider):
                 yield scrapy.Request(url, callback=self.parse)
 
     def parse_item(self, response):
-        hxs = response.xpath('//main')
-        url = reponse.url
+        hxs = response.xpath('//div[@id="main"]')
+        url = response.url
        
         itemID = hxs.xpath('.//div[@id="ItemId"]/text()')
-        itemID = re.search(r"\d{6}", str(itemID))
+        itemID = re.search(r"\d+", str(itemID))
+
         if itemID: 
             itemID = itemID.group(0)
         else:
             yield None 
+        page = re.search(r"page=\d+", str(url))
+        print "PAGE: ", page
+
+        if page: 
+            page = page.group(0)
+        else: 
+            page = 1
 
         category = response.xpath('//a[@class="track_BreadCrumbs_Category"]//span/text()').extract_first()
         brand = response.xpath('//a[@class="track_BreadCrumbs_Brand"]//span/text()').extract_first()
@@ -68,12 +78,15 @@ class MaspiderSpider(CrawlSpider):
         number_review = hxs.xpath('.//div[@class="product-review-stats tablet-divider"]//p//span/text()').extract_first()
         #repurchase = ('//div[@class="product-review-stats tablet-divider"]//p/text()')#.extract()[2]
         #package_qual = ('//div[@class="product-review-stats tablet-divider"]//p/text()')#.extract()[4]
-        repurchase = hxs.xpath('.//p[@class="pack-xs"]/text()').extract_first()
-        package_qual = hxs.xpath('.//p[@class="price-xs"]/text()').extract_first()
+        package_qual = hxs.xpath('.//p[@class="pack-xs"]/text()').extract_first()
+        package_qual = package_qual.split(': ')[1]
+        repurchase = hxs.xpath('.//div[@class="product-review-stats tablet-divider"]//p/text()').extract()[1]
+        repurchase = repurchase.split('%')[0]
 
-        new_item = MakeupAlleyLoader(MakeupAlleyItem(), item)
+        new_item = MakeupalleyLoader(MakeupalleyItem(), response)
         new_item.add_value('url', url)
         new_item.add_value('sku', itemID)
+        new_item.add_value('page', page)
         new_item.add_value('category', category)
         new_item.add_value('brand', brand)
         new_item.add_value('review_rating', review_rating)
@@ -82,7 +95,7 @@ class MaspiderSpider(CrawlSpider):
         new_item.add_value('package_qual', package_qual)
 
         print "LINK: ", response.url
-        reviews = hxs.xpath('.//div[id="reviews-wrapper"]//div[@class="comments"]')
+        reviews = hxs.xpath('.//div[@id="reviews-wrapper"]//div[@class="comments"]')
         for r in reviews:
             new_item.add_value('reviews', self.Review(r))
 
@@ -92,11 +105,14 @@ class MaspiderSpider(CrawlSpider):
     def Review(self, response):
         review = {}
         author_name = response.xpath('.//div[@class="user-reviews"]//p//a//span/text()').extract_first()
-        author_char = .response.xpath('.//div[@class="important"]//p/text()').extract()
+        author_char = response.xpath('.//div[@class="important"]//p/text()').extract()
         date = response.xpath('.//div[@class="date"]//p/text()').extract_first()
         review_rating = response.xpath('.//div[@class="lipies"]//span/@class').extract_first()
         review_rating = re.search(r"l-\d-\d", str(review_rating)).group(0)
-        review_text = response.xpath('.//div[@class="break-word"]/text').extract_first()
+        review_rating = review_rating.split('-')[1]
+        review_text = response.xpath('.//p[@class="break-word"]/text()').extract_first()
+        review_text = strip_html(review_text)
+        review_text = trim_whitespace(review_text)
         """
         skintype = ["Other", "Very Dry", "Dry", "Normal", "Combination", "Acne-prone", "Oily", "Very Oily", "Sensitive"] 
         skintone = ["Other", "Fair", "Fair-Medium", "Medium", "Olive", "Tan", "Medium Brown", "Dark", "Deep Dark"]
@@ -113,7 +129,8 @@ class MaspiderSpider(CrawlSpider):
         hairtype = author_char[2].split(',')[0]
         hairtexture = author_char[2].split(',')[1]
         haircolor = author_char[2].split(',')[2]
-        review['author'] = authoer_name
+        eyecolor = author_char[3]
+        review['author'] = author_name
         review['date'] = date
         review['age'] = age
         review['skintype'] = skintype
