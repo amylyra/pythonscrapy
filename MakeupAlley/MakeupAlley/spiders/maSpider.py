@@ -18,11 +18,18 @@ class MaspiderSpider(CrawlSpider):
     name = "maSpider"
     allowed_domains = ["makeupalley.com"]
     login_url = 'https://www.makeupalley.com/account/login.asp'
-    start_urls = ('https://www.makeupalley.com/product/searching.asp/page=2/pagesize=15/CategoryId=7/SD=/SC=/',
-                 )
-
+    base_url_first = 'https://www.makeupalley.com/product/searching.asp/page='
+    base_url_second = '/pagesize=15/CategoryId=7/SD=/SC=/'
+    start_urls = []
+    for i in range(1, 68): 
+        start_urls.append("{0}{1}{2}".format(base_url_first, str(i), base_url_second))
+    
     rules = (
-        Rule(LinkExtractor(allow=('.*ItemId=\d.*')), 
+        Rule(LinkExtractor(allow=('.*\/product\/showreview.asp\/ItemId=\d.*'), 
+             restrict_xpaths=('//td[@class="no-align"]')), 
+             callback='parse_item', follow=True),
+        Rule(LinkExtractor(allow=('.*\/product\/showreview.asp\/page=\d+\/pagesize=10\/ItemID=\d.*'), 
+             restrict_xpaths=('//a[@class="track_Paging_"]')), 
              callback='parse_item', follow=True),
     )
 
@@ -66,7 +73,7 @@ class MaspiderSpider(CrawlSpider):
         print "PAGE: ", page
 
         if page: 
-            page = page.group(0)
+            page = page.group(0).split('=')[1]
         else: 
             page = 1
 
@@ -111,6 +118,8 @@ class MaspiderSpider(CrawlSpider):
         review_rating = re.search(r"l-\d-\d", str(review_rating)).group(0)
         review_rating = review_rating.split('-')[1]
         review_text = response.xpath('.//p[@class="break-word"]/text()').extract_first()
+        if not review_text: 
+            review_text = response.xpath('.//p[@class="1break-word"]/text()').extract_first()
         review_text = strip_html(review_text)
         review_text = trim_whitespace(review_text)
         """

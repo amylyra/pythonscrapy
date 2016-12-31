@@ -20,6 +20,7 @@ USER_AGENT = '(X11; CrOS i686 2268.111.0) AppleWebKit/536.11 (KHTML, like Gecko)
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
+#ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
